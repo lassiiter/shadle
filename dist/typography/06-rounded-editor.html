@@ -24,6 +24,7 @@
   </defs></svg>
 
   <div class="site-wrap stacked-layout">
+    <div class="game-shell">
     <header class="site-header">
       <a class="brand" href="../" aria-label="Shadle home"><svg><use href="#i-mark"/></svg><span>shadle<span class="brand-period">.</span></span></a>
       <span class="brand-caption">a daily shader puzzle</span>
@@ -41,10 +42,10 @@
         <section class="editor-column" aria-label="Shader previews and editor">
           <div class="window editor-window">
             <div class="preview-window">
-              <div class="window-bar puzzle-bar" aria-label="Shader puzzle"><span class="window-title puzzle-caption"><span class="window-pip"></span><span id="puzzle-number">SHADER PUZZLE</span><span class="puzzle-separator" aria-hidden="true">/</span><span id="puzzle-date"></span></span><div class="bar-right"><button class="text-button debug-return" id="exit-debug-button" hidden>Back to today ↩</button><span class="mono">GLSL / FRAGMENT</span><button class="text-button preview-inspect" id="inspect-button" title="Enlarge shader previews"><svg><use href="#i-expand"/></svg>Inspect</button></div></div>
+              <div class="window-bar puzzle-bar" aria-label="Shader puzzle"><span class="window-title puzzle-caption"><span class="window-pip"></span><span id="puzzle-number">SHADER PUZZLE</span></span><div class="bar-right"><button class="text-button debug-return" id="exit-debug-button" hidden>Back to today ↩</button><span id="puzzle-date"></span></div></div>
               <div class="shader-previews">
                 <div class="shader-view"><div class="preview-label"><span class="label-dot output-dot"></span>YOUR OUTPUT<span class="live-label">LIVE</span></div><div class="canvas-wrap"><canvas id="output-canvas" width="480" height="480" aria-label="Live preview of your shader"></canvas><span class="canvas-corner corner-tl"></span><span class="canvas-corner corner-br"></span><span class="canvas-id">OUTPUT</span></div></div>
-                <div class="shader-view"><div class="preview-label"><span class="label-dot target-dot"></span>TARGET<span class="locked-label">REFERENCE</span></div><div class="canvas-wrap"><canvas id="target-canvas" width="480" height="480" aria-label="Target shader to recreate"></canvas><span class="canvas-corner corner-tl"></span><span class="canvas-corner corner-br"></span><span class="canvas-id">TARGET</span></div></div>
+                <div class="shader-view"><div class="preview-label"><span class="label-dot target-dot"></span>TARGET<button class="text-button preview-inspect" id="inspect-button" title="Enlarge shader previews"><svg><use href="#i-expand"/></svg>Inspect</button></div><div class="canvas-wrap"><canvas id="target-canvas" width="480" height="480" aria-label="Target shader to recreate"></canvas><span class="canvas-corner corner-tl"></span><span class="canvas-corner corner-br"></span><span class="canvas-id">TARGET</span></div></div>
               </div>
             </div>
             <div class="file-tab hatched-bar"><span class="file-name"><svg><use href="#i-file"/></svg><span>daily.frag</span><span class="file-dot"></span></span><span class="editor-language">GLSL ES 1.00</span><button class="icon-button reset-button" id="reset-button" title="Restore starter shader (keeps your attempts)" aria-label="Restore starter shader"><svg><use href="#i-reset"/></svg></button></div>
@@ -54,9 +55,9 @@
                 <pre class="code-highlight" id="code-highlight" aria-hidden="true"></pre>
                 <textarea id="shader-source" class="shader-source" aria-label="Full fragment shader source" aria-describedby="editor-keyboard-help" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off" wrap="off"></textarea>
               </div>
+              <div class="compiler-errors" id="compiler-errors" role="status" hidden><pre id="compiler-log"></pre></div>
             </div>
             <span class="sr-only" id="editor-keyboard-help">Edit the complete GLSL ES 1.00 shader. Tab indents; Shift Tab unindents. Escape then Tab leaves the editor. Control or Command X cuts the current line when no text is selected. Control or Command Enter previews. Add Shift to submit. Control or Command S saves your shader draft locally.</span>
-            <div class="compiler-errors" id="compiler-errors" role="status" hidden><strong>FRAGMENT SHADER / COMPILE ERROR</strong><pre id="compiler-log"></pre><span>Last valid output shown. No submission used.</span></div>
             <div class="editor-bottom"><span><span class="ready-dot"></span><span id="editor-status">Ready to compile</span></span><span id="source-lines">GLSL ES 1.00</span></div>
             <div class="compile-row"><button class="preview-button" id="preview-button" title="Preview shader (Ctrl or Command + Enter)"><span class="play-triangle"></span>Preview</button><button class="compile-button" id="compile-button" title="Submit shader (Ctrl or Command + Shift + Enter)"><span id="compile-label">Submit shader</span><svg><use href="#i-arrow"/></svg></button></div>
             <div class="editor-shortcuts"><button class="text-button uniform-reference-link" data-action="reference">Uniform Reference ↗</button><span>Ctrl ↵ preview <span class="shortcut-dot">·</span> Ctrl ⇧ ↵ submit</span></div>
@@ -77,6 +78,7 @@
       </div>
 
     </main>
+    </div>
 
     <footer class="site-footer"><span><svg><use href="#i-mark"/></svg> Daily GLSL challenges.</span><div><button data-action="archive">Puzzle Archive <span>↗</span></button><span class="footer-dot">·</span><span>Next puzzle in <strong id="countdown">00:00:00</strong></span></div></footer>
   </div>

@@ -1,6 +1,6 @@
 # shadle.
 
-A daily GLSL shader challenge. Start with a fragment shader, complete one marked expression, and match the target image in six submissions. The centered stacked layout places shader previews above the hatched file bar and editor in one card. Attempts and a Hints button share a compact row below; Hints opens a dismissible panel.
+A daily GLSL shader challenge. Start with a fragment shader, complete one marked expression, and match the target image in six submissions. The centered stacked layout attaches the Shadle header to the preview and editor card. The header and game center vertically together. Attempts and a Hints button share a compact row below; Hints opens a dismissible panel.
 
 Run `npm run dev` and open the local URL printed by the server (port 4173, or the next free port). No installation or build step is required. Serve `dist/` with any static host. The app uses real WebGL fragment shaders; graphics acceleration must be available.
 
