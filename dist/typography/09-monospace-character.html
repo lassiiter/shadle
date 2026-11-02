@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f5f4ec">
+  <meta name="description" content="A daily GLSL shader challenge. Complete one expression to match the target image. Each unsuccessful submission unlocks a hint.">
+  <title>09 Monospace character · Shadle typography</title>
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <link rel="stylesheet" href="./fonts/fonts.css"><link rel="stylesheet" href="./base.css"><link rel="stylesheet" href="./preview.css"><style>:root{--sans:'Space Grotesk',Arial,sans-serif;--mono:'Space Mono','Courier New',monospace;--label-font:'Space Mono',monospace;--type-ui:14px;--type-code:12px;--type-leading:24px;--type-label:9px;--type-heading:20px;--type-weight:600}</style>
+  
+</head>
+<body data-type-name="09 Monospace character" data-ui-font="Space Grotesk" data-code-font="Space Mono"><aside class="type-review" aria-label="Typography preview"><span class="type-option" title="Space Grotesk + Space Mono · UI 14 / Code 12 / Labels 9px"><strong>09 / 10</strong><span>Monospace character</span></span><a class="type-next" href="./10-big-and-clear.html" aria-label="Next typography preview: Big and clear">Next →</a><small class="sr-only" id="type-font-status" role="status">Loading fonts…</small></aside>
+  <svg class="svg-library" aria-hidden="true"><defs>
+    <symbol id="i-mark" viewBox="0 0 24 24"><path d="M3 3h6v6H3zm6 6h6v6H9zm6 6h6v6h-6zM15 3h6v6h-6zM3 15h6v6H3z" fill="currentColor" stroke="none"/></symbol>
+    <symbol id="i-help" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.3 8.7a2.8 2.8 0 0 1 5.4.9c0 2-2.7 2.2-2.7 4.2M12 17h.01"/></symbol>
+    <symbol id="i-chart" viewBox="0 0 24 24"><path d="M4 20V11h4v9m2 0V4h4v16m2 0v-6h4v6M3 20h18"/></symbol>
+    <symbol id="i-sound" viewBox="0 0 24 24"><path d="m11 4-6 5H2v6h3l6 5zM16 8c2 2 2 6 0 8m3-11c4 4 4 10 0 14"/></symbol>
+    <symbol id="i-mute" viewBox="0 0 24 24"><path d="m11 4-6 5H2v6h3l6 5zM16 9l6 6m0-6-6 6"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14m-6-6 6 6-6 6"/></symbol>
+    <symbol id="i-reset" viewBox="0 0 24 24"><path d="M4 10a8 8 0 1 1 1 7M4 4v6h6"/></symbol>
+    <symbol id="i-file" viewBox="0 0 24 24"><path d="M5 3h9l5 5v13H5zM14 3v6h5M8 13h8m-8 4h6"/></symbol>
+    <symbol id="i-expand" viewBox="0 0 24 24"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"/></symbol>
+  </defs></svg>
+
+  <div class="site-wrap stacked-layout">
+    <header class="site-header">
+      <a class="brand" href="../" aria-label="Shadle home"><svg><use href="#i-mark"/></svg><span>shadle<span class="brand-period">.</span></span></a>
+      <span class="brand-caption">a daily shader puzzle</span>
+      <nav class="header-nav" aria-label="Main navigation">
+        <button class="how-button" data-action="help" aria-label="How to play"><svg><use href="#i-help"/></svg><span>How to play</span></button>
+        <span class="nav-separator"></span>
+        <button class="icon-button" data-action="stats" aria-label="Your statistics" title="Your statistics"><svg><use href="#i-chart"/></svg></button>
+        <button class="icon-button" id="sound-button" aria-label="Turn sound on" title="Turn sound on"><svg><use href="#i-mute"/></svg></button>
+        <button class="next-puzzle-button" id="next-puzzle-button" title="Debug: load the next day’s puzzle" aria-label="Next puzzle (debug)"><span class="next-puzzle-debug">DEBUG</span><span>Next<span class="next-puzzle-word"> puzzle</span></span><svg><use href="#i-arrow"/></svg></button>
+      </nav>
+    </header>
+
+    <main>
+      <div class="workspace">
+        <section class="editor-column" aria-label="Shader previews and editor">
+          <div class="window editor-window">
+            <div class="preview-window">
+              <div class="window-bar puzzle-bar" aria-label="Shader puzzle"><span class="window-title puzzle-caption"><span class="window-pip"></span><span id="puzzle-number">SHADER PUZZLE</span><span class="puzzle-separator" aria-hidden="true">/</span><span id="puzzle-date"></span></span><div class="bar-right"><button class="text-button debug-return" id="exit-debug-button" hidden>Back to today ↩</button><span class="mono">GLSL / FRAGMENT</span><button class="text-button preview-inspect" id="inspect-button" title="Enlarge shader previews"><svg><use href="#i-expand"/></svg>Inspect</button></div></div>
+              <div class="shader-previews">
+                <div class="shader-view"><div class="preview-label"><span class="label-dot output-dot"></span>YOUR OUTPUT<span class="live-label">LIVE</span></div><div class="canvas-wrap"><canvas id="output-canvas" width="480" height="480" aria-label="Live preview of your shader"></canvas><span class="canvas-corner corner-tl"></span><span class="canvas-corner corner-br"></span><span class="canvas-id">OUTPUT</span></div></div>
+                <div class="shader-view"><div class="preview-label"><span class="label-dot target-dot"></span>TARGET<span class="locked-label">REFERENCE</span></div><div class="canvas-wrap"><canvas id="target-canvas" width="480" height="480" aria-label="Target shader to recreate"></canvas><span class="canvas-corner corner-tl"></span><span class="canvas-corner corner-br"></span><span class="canvas-id">TARGET</span></div></div>
+              </div>
+            </div>
+            <div class="file-tab hatched-bar"><span class="file-name"><svg><use href="#i-file"/></svg><span>daily.frag</span><span class="file-dot"></span></span><span class="editor-language">GLSL ES 1.00</span><button class="icon-button reset-button" id="reset-button" title="Restore starter shader (keeps your attempts)" aria-label="Restore starter shader"><svg><use href="#i-reset"/></svg></button></div>
+            <div class="full-shader-editor">
+              <div class="gutter-viewport" aria-hidden="true"><div id="line-numbers"></div></div>
+              <div class="source-viewport">
+                <pre class="code-highlight" id="code-highlight" aria-hidden="true"></pre>
+                <textarea id="shader-source" class="shader-source" aria-label="Full fragment shader source" aria-describedby="editor-keyboard-help" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off" wrap="off"></textarea>
+              </div>
+            </div>
+            <span class="sr-only" id="editor-keyboard-help">Edit the complete GLSL ES 1.00 shader. Tab indents; Shift Tab unindents. Escape then Tab leaves the editor. Control or Command X cuts the current line when no text is selected. Control or Command Enter previews. Add Shift to submit. Control or Command S saves your shader draft locally.</span>
+            <div class="compiler-errors" id="compiler-errors" role="status" hidden><strong>FRAGMENT SHADER / COMPILE ERROR</strong><pre id="compiler-log"></pre><span>Last valid output shown. No submission used.</span></div>
+            <div class="editor-bottom"><span><span class="ready-dot"></span><span id="editor-status">Ready to compile</span></span><span id="source-lines">GLSL ES 1.00</span></div>
+            <div class="compile-row"><button class="preview-button" id="preview-button" title="Preview shader (Ctrl or Command + Enter)"><span class="play-triangle"></span>Preview</button><button class="compile-button" id="compile-button" title="Submit shader (Ctrl or Command + Shift + Enter)"><span id="compile-label">Submit shader</span><svg><use href="#i-arrow"/></svg></button></div>
+            <div class="editor-shortcuts"><button class="text-button uniform-reference-link" data-action="reference">Uniform Reference ↗</button><span>Ctrl ↵ preview <span class="shortcut-dot">·</span> Ctrl ⇧ ↵ submit</span></div>
+          </div>
+
+        </section>
+
+        <section class="visual-column" aria-label="Attempt history and hints">
+          <div class="attempts-panel">
+            <div class="attempts-heading"><h2>Attempts <span id="attempt-counter">0 / 6</span></h2><div class="attempt-actions"><span class="sr-only" id="attempts-caption">CLOSENESS TO TARGET</span><button class="text-button result-reopen" id="view-result-button" hidden>View result ↗</button></div></div>
+            <div id="attempts" aria-label="Your submission history" aria-live="polite"></div>
+            <span class="attempts-threshold">98% to solve</span>
+          </div>
+
+          <button class="hints-trigger" id="open-hints" popovertarget="hints-panel" aria-label="Hints: 0 of 3 unlocked"><svg><use href="#i-help"/></svg><span>Hints</span><span id="hint-count" aria-live="polite">0 / 3</span></button>
+          <div class="window hint-card" id="hints-panel" popover aria-labelledby="hints-title"><div class="hint-heading"><div><h2 id="hints-title">Hints</h2><p>Each unsuccessful submission unlocks a hint.</p></div><button class="close-button" popovertarget="hints-panel" popovertargetaction="hide" aria-label="Close hints">×</button></div><span class="hint-status" id="hint-status" aria-live="polite">0 / 3 UNLOCKED</span><ol id="hint-list" class="hint-list" aria-live="polite"></ol><button class="hint-button" id="hint-button" disabled>Submit shader to unlock hint 1</button></div>
+        </section>
+      </div>
+
+    </main>
+
+    <footer class="site-footer"><span><svg><use href="#i-mark"/></svg> Daily GLSL challenges.</span><div><button data-action="archive">Puzzle Archive <span>↗</span></button><span class="footer-dot">·</span><span>Next puzzle in <strong id="countdown">00:00:00</strong></span></div></footer>
+  </div>
+
+  <dialog id="modal" aria-labelledby="modal-label"><div class="modal-header"><span class="window-title" id="modal-label">SHADLE</span><button class="close-button" id="close-modal" aria-label="Close dialog">×</button></div><div id="modal-body"></div></dialog>
+  <div class="toast" id="toast" role="status"></div>
+  <script type="module" src="./preview-app.js"></script>
+</body>
+</html>

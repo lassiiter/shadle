@@ -1,0 +1,33 @@
+/* Big and clear: selected typography option 10. */
+:root{--sans:'Atkinson Hyperlegible',Arial,sans-serif;--mono:'Fira Mono','Courier New',monospace;--label-font:'Atkinson Hyperlegible',sans-serif;--type-ui:16px;--type-code:14px;--type-leading:26px;--type-label:11px;--type-heading:23px;--type-weight:700}
+body{font-size:var(--type-ui)}
+.brand{font-family:'Space Grotesk',Arial,sans-serif}
+.brand-caption{font-family:var(--sans);font-size:calc(var(--type-ui) - 3px)}
+.eyebrow,.window-title,.small-label,.preview-label,.guided-badge,.hint-status,.daily-stamp>span,.text-button{font-family:var(--label-font)}
+.eyebrow,.window-title{font-size:var(--type-label);font-weight:var(--type-weight);letter-spacing:.65px}
+.small-label,.hatched-bar .small-label,.bar-right .mono,.preview-label,.locked-label,.live-label{font-size:calc(var(--type-label) - 1px)}
+.guided-badge{font-size:calc(var(--type-label) - 1px);font-weight:var(--type-weight)}
+.intro .daily-stamp strong{font-size:var(--type-heading);font-weight:var(--type-weight);letter-spacing:-.5px}
+.intro .daily-stamp>span:first-child{font-size:calc(var(--type-label) - 1px)}
+.intro .daily-stamp>span:last-child{font-size:calc(var(--type-label) - 2px);letter-spacing:.2px}
+.how-button,.next-puzzle-button{font-family:var(--sans);font-size:calc(var(--type-ui) - 2px);font-weight:var(--type-weight)}
+.compile-button,.preview-button{font-size:var(--type-ui);font-weight:var(--type-weight)}
+.text-button{font-size:var(--type-label)}
+.editor-shortcuts{font-size:calc(var(--type-label) - 2px);flex-wrap:wrap}
+.editor-shortcuts .uniform-reference-link{font-family:var(--label-font);font-size:var(--type-label)}
+.file-tab{font-size:calc(var(--type-code) - 1px)}.editor-language{font-size:calc(var(--type-label) - 1px)}
+.code-highlight,.shader-source{font-size:var(--type-code);line-height:var(--type-leading)}
+.gutter-viewport>div{font-size:calc(var(--type-code) - 2px);line-height:var(--type-leading)}.gutter-viewport span{height:var(--type-leading)}
+.editor-bottom{font-size:calc(var(--type-label) - 1px)}
+.hint-heading h2,.attempts-heading h2{font-size:var(--type-ui);font-weight:var(--type-weight);letter-spacing:-.25px}
+.hint-heading p{font-size:calc(var(--type-ui) - 3px)}.hint-status{font-size:calc(var(--type-label) - 1px)}
+.hint-button{font-family:var(--sans);font-size:calc(var(--type-ui) - 1px)}
+.hint-list strong{font-size:calc(var(--type-ui) - 1px);font-weight:var(--type-weight)}.hint-list p{font-size:calc(var(--type-ui) - 2px)}.hint-list code{font-size:calc(var(--type-code) - 1px)}
+.attempts-heading h2 span{font-size:calc(var(--type-label) + 1px)}.attempts-heading .small-label{font-size:calc(var(--type-label) - 2px)}
+.compile-box-number{font-size:calc(var(--type-label) - 1px)}.compile-box-score{font-size:calc(var(--type-ui) + 3px)}
+.compile-log-note,.site-footer{font-size:calc(var(--type-label) - 1px)}
+.source-view{font-size:var(--type-code);line-height:var(--type-leading)}.modal-content>p,.help-step p,.glsl-reference dd{font-size:calc(var(--type-ui) - 2px)}
+.modal-content h2,.result-heading h2{font-weight:var(--type-weight)}
+@media(max-width:850px){.header-nav{gap:10px}}
+
+@media(max-width:600px){.puzzle-meta .eyebrow{font-size:calc(var(--type-label) - 1px);letter-spacing:.35px}.intro .daily-stamp strong{font-size:calc(var(--type-heading) - 3px)}.intro .daily-stamp>span:first-child{font-size:calc(var(--type-label) - 2px)}.intro .daily-stamp>span:last-child{font-size:calc(var(--type-label) - 3px)}.next-puzzle-button{font-size:10px}.editor-bottom{font-size:calc(var(--type-label) - 2px)}.attempts-heading .small-label{font-size:calc(var(--type-label) - 3px)}.result-reopen{font-size:calc(var(--type-label) - 1px)}}
