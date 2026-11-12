@@ -1,0 +1,26 @@
+#shadle-month-review { color:var(--foreground); }
+#shadle-month-review .review-heading { justify-content:space-between; padding-right:90px; margin-bottom:calc(var(--font-size-base) * 1); }
+#shadle-month-review .viz-controls { margin-bottom:calc(var(--font-size-base) * 1); }
+#shadle-month-review .review-selected { margin-top:calc(var(--font-size-base) * 1); }
+#shadle-month-review .review-facts { display:grid; grid-template-columns:90px minmax(0,1fr); gap:8px 12px; margin:calc(var(--font-size-base) * .5) 0 calc(var(--font-size-base) * 1); }
+#shadle-month-review dt { color:var(--muted-foreground); }
+#shadle-month-review dd { margin:0; overflow-wrap:anywhere; }
+#shadle-month-review .review-images { display:grid; grid-template-columns:1fr 1fr; gap:calc(var(--font-size-base) * 1); margin-bottom:calc(var(--font-size-base) * 1); }
+#shadle-month-review figure { margin:0; }
+#shadle-month-review figure img { display:block; width:100%; aspect-ratio:1; object-fit:contain; }
+#shadle-month-review figcaption { text-align:center; margin-top:calc(var(--font-size-base) * .25); }
+#shadle-month-review details { margin-top:calc(var(--font-size-base) * .5); }
+#shadle-month-review summary { color:var(--foreground); }
+#shadle-month-review details p { margin:calc(var(--font-size-base) * .5) 0; }
+#shadle-month-review pre { white-space:pre-wrap; overflow-wrap:anywhere; color:var(--foreground); margin:calc(var(--font-size-base) * .5) 0; }
+#shadle-month-review .review-feedback > .viz-controls { margin-top:calc(var(--font-size-base) * .5); }
+#shadle-month-review .review-feedback > .form-label { display:block; margin-bottom:calc(var(--font-size-base) * .5); }
+#shadle-month-review .review-gallery { display:grid; grid-template-columns:repeat(6,minmax(0,1fr)); gap:8px; margin-top:calc(var(--font-size-base) * .5); }
+#shadle-month-review .review-gallery img { display:block; width:100%; aspect-ratio:1; }
+#shadle-month-review .review-gallery .review-caption { display:block; margin-top:4px; }
+@media(max-width:480px) {
+  #shadle-month-review .review-heading { padding-right:0; }
+  #shadle-month-review .review-gallery { grid-template-columns:repeat(5,minmax(0,1fr)); }
+  #shadle-month-review .review-facts { grid-template-columns:1fr; gap:4px; }
+  #shadle-month-review dd { margin-bottom:8px; }
+}

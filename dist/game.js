@@ -1,8 +1,10 @@
 import { shaderPuzzle } from './puzzles.js';
+import { monthPuzzles } from './puzzle-bank.js';
 
 export const MAX_ATTEMPTS = 6;
 export const EPOCH = Date.UTC(2026, 9, 1);
 export const SAMPLE_SIZE = 96;
+export const MONTH_START = Date.UTC(2026, 10, 13);
 export const STARTER_SOURCE = `precision highp float;
 
 uniform vec2 u_resolution;
@@ -31,6 +33,11 @@ export function puzzleForDate(key) {
   const date = new Date(key + 'T00:00:00Z');
   const number = Math.floor((date.getTime() - EPOCH) / 86400000) + 1;
   if (!Number.isFinite(number) || dateKey(date) !== key) throw new Error('Invalid puzzle date');
+  if (date.getTime() >= MONTH_START) {
+    const bankDay = Math.floor((date.getTime() - MONTH_START) / 86400000);
+    const approved = monthPuzzles[bankDay % monthPuzzles.length];
+    return { key, number, ...approved, repairCount: 1, technique: `${approved.level.toUpperCase()} / ${approved.focus.toUpperCase()}`, brief: approved.goal };
+  }
   let seed = Math.floor(date.getTime() / 86400000) ^ 0x51ad1e;
   seed = Math.imul(seed ^ (seed >>> 16), 0x85ebca6b);
   seed = Math.imul(seed ^ (seed >>> 13), 0xc2b2ae35);

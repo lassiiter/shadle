@@ -7,7 +7,9 @@
   "scripts": {
     "dev": "node scripts/serve.mjs",
     "start": "node scripts/serve.mjs",
-    "test": "node --test tests/game.test.mjs tests/editor.test.mjs",
-    "check": "node --check dist/app.js && node --check dist/game.js && node --check dist/puzzles.js && node --check dist/renderer.js && node --check dist/editor.js"
+    "test": "node --test tests/game.test.mjs tests/editor.test.mjs tests/month-review.test.mjs",
+    "check": "node --check dist/app.js && node --check dist/game.js && node --check dist/puzzles.js && node --check dist/puzzle-bank.js && node --check dist/renderer.js && node --check dist/editor.js && node --check review/month-one.js && node --check review/review.js && node --check scripts/build-puzzle-review.mjs && node --check scripts/serve.mjs",
+    "review:build": "node scripts/build-puzzle-review.mjs",
+    "review": "npm run review:build && node scripts/serve.mjs artifacts/puzzle-review"
   }
 }

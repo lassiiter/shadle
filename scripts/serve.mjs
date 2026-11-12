@@ -2,7 +2,7 @@ import { createServer } from 'node:http';
 import { readFile } from 'node:fs/promises';
 import { resolve, extname, sep } from 'node:path';
 
-const root = resolve(import.meta.dirname, '../dist');
+const root = resolve(import.meta.dirname, '..', process.argv[2] || 'dist');
 let port = Number(process.env.PORT || 4173);
 const types = { '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.svg': 'image/svg+xml' };
 const server = createServer(async (req, res) => {

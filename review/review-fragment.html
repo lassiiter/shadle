@@ -1,0 +1,40 @@
+<div id="shadle-month-review">
+  <div class="viz-row review-heading">
+    <h2>30 shader puzzles</h2>
+    <span class="text-small" id="month-render-status" role="status">Checking shader renders…</span>
+  </div>
+  <div class="viz-controls">
+    <label class="form-label">Puzzle<select class="form-select" id="month-select"></select></label>
+    <button class="btn" id="month-prev" type="button">Previous</button>
+    <button class="btn" id="month-next" type="button">Next</button>
+  </div>
+  <details class="review-gallery-details" open>
+    <summary>All 30 targets</summary>
+    <div id="month-gallery" class="review-gallery"></div>
+  </details>
+  <section aria-labelledby="month-title" class="review-selected">
+    <div class="viz-row"><h3 id="month-title"></h3><span class="text-small" id="month-level"></span></div>
+    <dl class="review-facts">
+      <dt>GLSL focus</dt><dd id="month-focus"></dd>
+      <dt>New idea</dt><dd id="month-idea"></dd>
+      <dt>Goal</dt><dd id="month-goal"></dd>
+    </dl>
+    <div class="review-images">
+      <figure><img id="month-target" alt=""><figcaption>Target</figcaption></figure>
+      <figure><img id="month-starter" alt=""><figcaption>Starter output</figcaption></figure>
+    </div>
+    <div id="month-hints" class="review-hints"></div>
+    <details><summary>Starter shader</summary><pre><code id="month-starter-source"></code></pre></details>
+    <details><summary>Full reference shader</summary><pre><code id="month-reference-source"></code></pre></details>
+    <details class="review-feedback">
+      <summary>Your review</summary>
+      <div class="viz-controls">
+        <label class="form-label">Decision<select id="month-decision" class="form-select"><option value="unreviewed">Unreviewed</option><option value="keep">Keep</option><option value="revise">Revise</option><option value="skip">Skip</option></select></label>
+      </div>
+      <label class="form-label">Notes<textarea id="month-note" class="form-control" rows="3" maxlength="260" placeholder="Difficulty, hint clarity, or similarity to another puzzle"></textarea></label>
+      <div class="viz-row"><button id="month-export" class="btn" type="button">Download feedback</button><span id="month-feedback-status" class="text-small" role="status"></span></div>
+    </details>
+  </section>
+  <details><summary>Rendering checks</summary><pre id="month-checks"></pre></details>
+  <script type="application/json" id="shadle-month-data">__PUZZLE_DATA__</script>
+</div>

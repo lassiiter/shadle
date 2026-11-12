@@ -5,6 +5,8 @@ import { migrateGeneratedShader } from './puzzles.js';
 
 const $ = selector => document.querySelector(selector);
 const today = dateKey();
+const debugToolsEnabled = ['localhost', '127.0.0.1', '[::1]'].includes(window.location.hostname)
+  && new URLSearchParams(window.location.search).get('debug') === '1';
 let selectedKey = today, debugMode = false, puzzle = puzzleForDate(today), renderers = [], targetPixels;
 let graphicsReady = false, inspectionRenderers = [], toastTimer, previewTimer, audioContext, storeAvailable = true;
 const STORAGE_KEY = 'shadle-guided-v3';
@@ -119,7 +121,8 @@ function renderPuzzle() {
   clearTimeout(previewTimer);
   $('#puzzle-number').textContent = `SHADER PUZZLE #${String(puzzle.number).padStart(3, '0')}`;
   $('#puzzle-date').textContent = new Date(selectedKey + 'T00:00:00Z').toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric', timeZone: 'UTC' }).toUpperCase();
-  $('#exit-debug-button').hidden = !debugMode;
+  $('#next-puzzle-button').hidden = !debugToolsEnabled;
+  $('#exit-debug-button').hidden = !debugToolsEnabled || !debugMode;
   $('#attempts-caption').textContent = 'CLOSENESS TO TARGET'; document.title = `shadle #${String(puzzle.number).padStart(3, '0')} — ${puzzle.name}`;
   if (graphicsReady) {
     try {
@@ -136,6 +139,7 @@ function loadPuzzle(key, debug = false) {
   save(); selectedKey = key; debugMode = debug; puzzle = nextPuzzle; game = readGame(key); renderPuzzle();
 }
 $('#next-puzzle-button').addEventListener('click', () => {
+  if (!debugToolsEnabled) return;
   const nextDate = new Date(selectedKey + 'T00:00:00Z');
   nextDate.setUTCDate(nextDate.getUTCDate() + 1);
   loadPuzzle(dateKey(nextDate), true);
@@ -213,7 +217,7 @@ function showResult() {
   const mode = debugMode ? 'debug' : isDailyPuzzle() ? 'daily' : 'practice';
   const hostname = window.location.hostname;
   const localHost = hostname === 'localhost' || hostname.endsWith('.localhost') || hostname.startsWith('127.') || hostname === '[::1]';
-  const url = window.location.protocol === 'https:' && !localHost ? window.location.origin : '';
+  const url = window.location.protocol === 'https:' && !localHost ? new URL('./', window.location.href).href : '';
   const text = shareText(puzzle, game.attempts, { mode, hintsUsed: game.hintsRevealed, url });
   const boxes = Array.from({ length: MAX_ATTEMPTS }, (_, i) => {
     const attempt = game.attempts[i];
@@ -261,6 +265,7 @@ function showHelp() {
     <div class="help-step"><span class="step-number">02</span><div><strong>Preview</strong><p>Compare your output with the target.</p></div></div>
     <div class="help-step"><span class="step-number">03</span><div><strong>Submit</strong><p>98% or higher solves it.</p></div></div>
     <p class="help-rules">Missed submissions unlock hints.<br>Compile errors don’t use attempts.</p>
+    <p>Your progress saves automatically in this browser. No account needed. It stays on this device; clearing site data removes it.</p>
     <button class="compile-button" id="help-start">Back to puzzle <svg><use href="#i-arrow"/></svg></button>
   </div>`);
   $('#help-start').addEventListener('click', closeModal);
