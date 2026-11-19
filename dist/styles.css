@@ -128,8 +128,8 @@
 
 
 /* Refined action typography, with a neutral secondary Preview button. */
-.compile-row .preview-button,.compile-row .compile-button{font-family:'Space Grotesk',var(--sans);font-size:15px;font-weight:500;line-height:1.25;letter-spacing:-.15px}
-.compile-row .compile-button{font-weight:600}
+.compile-row .preview-button,.compile-row .compile-button{font-family:'Space Mono',var(--mono);font-size:15px;font-weight:400;line-height:1.25;letter-spacing:-.15px}
+.compile-row .compile-button{font-weight:700}
 .compile-row .preview-button{background:#ecece8;border-color:#c5c7bf;color:#3d4139}
 .compile-row .preview-button:hover{background:#e2e3dd;border-color:#aeb3a5;color:var(--ink)}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
