@@ -1,4 +1,6 @@
-// Approved 30-puzzle bank, shared by the daily game and the review pack.
+import { expandedCandidates } from './expanded-puzzles.js';
+
+// 101 puzzles, numbered 000–100, shared by the daily game and review pack.
 const background = 'vec3(0.025, 0.04, 0.055)';
 const paint = '__PUZZLE_PAINT__';
 const colorOutput = '  gl_FragColor = vec4(color, 1.0);';
@@ -40,7 +42,7 @@ const treatments = [
 ];
 
 function paintFor(index) {
-  const treatment = treatments[index];
+  const treatment = treatments[index < treatments.length ? index : (index * 7) % treatments.length];
   if (!treatment) throw new Error(`Missing color treatment for puzzle ${index + 1}`);
   return `  vec3 shapeColor = ${treatment.fill};
   vec3 color = mix(${treatment.background || background}, shapeColor, mask);
@@ -321,10 +323,11 @@ void main() {
   vec2 p = (gl_FragCoord.xy - 0.5 * u_resolution)
          / min(u_resolution.x, u_resolution.y);`;
 
-export const monthPuzzles = candidates.map((candidate, index) => {
-  const id = String(index + 1).padStart(2, '0');
+export const monthPuzzles = [...candidates, ...expandedCandidates].map((candidate, index) => {
+  const id = String(index).padStart(3, '0');
   const { name, focus, level, idea, goal, setup = '', line, initial, answer, hints } = candidate;
-  const before = prefix + (setup ? '\n\n' + setup : '') + '\n\n';
+  const programPrefix = candidate.helpers ? prefix.replace('void main()', candidate.helpers + '\n\nvoid main()') : prefix;
+  const before = programPrefix + (setup ? '\n\n' + setup : '') + '\n\n';
   const after = '\n' + (candidate.body || paint).replaceAll(paint, paintFor(index)) + '\n}';
   const statement = line.replace('REPAIR', answer);
   return {

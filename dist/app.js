@@ -1,4 +1,4 @@
-import { MAX_ATTEMPTS, EPOCH, dateKey, puzzleForDate, compareImages, shareText, statistics, hintProgress } from './game.js';
+import { MAX_ATTEMPTS, EPOCH, dateKey, puzzleForDate, compareImages, shareText, statistics, hintProgress, profileForSequence } from './game.js';
 import { createRenderer, ShaderError } from './renderer.js';
 import { createEditor, escapeHtml } from './editor.js';
 import { migrateGeneratedShader } from './puzzles.js';
@@ -9,11 +9,12 @@ const debugToolsEnabled = ['localhost', '127.0.0.1', '[::1]'].includes(window.lo
   && new URLSearchParams(window.location.search).get('debug') === '1';
 let selectedKey = today, debugMode = false, puzzle = puzzleForDate(today), renderers = [], targetPixels;
 let graphicsReady = false, inspectionRenderers = [], toastTimer, previewTimer, audioContext, storeAvailable = true;
-const STORAGE_KEY = 'shadle-guided-v3';
+const STORAGE_KEY = 'shadle-guided-v4';
 let profile;
 try {
-  const parsed = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
-  profile = { games: parsed.games && typeof parsed.games === 'object' ? parsed.games : {}, practice: parsed.practice && typeof parsed.practice === 'object' ? parsed.practice : {}, sound: parsed.sound === true };
+  const current = localStorage.getItem(STORAGE_KEY);
+  const parsed = JSON.parse(current || localStorage.getItem('shadle-guided-v3') || '{}');
+  profile = profileForSequence(parsed, current === null);
 } catch { profile = { games: {}, practice: {}, sound: false }; }
 const isDailyPuzzle = () => selectedKey === today && !debugMode;
 const progressFor = (key, debug = debugMode) => key === today && !debug ? profile.games : profile.practice;
@@ -275,7 +276,7 @@ function showStats() {
 }
 function showArchive() {
   const dates = [], date = new Date(today + 'T00:00:00Z');
-  for (let i = 0; i < 8 && date.getTime() >= EPOCH; i++) { dates.push(dateKey(date)); date.setUTCDate(date.getUTCDate() - 1); }
+  for (let i = 0; i < 101 && date.getTime() >= EPOCH; i++) { dates.push(dateKey(date)); date.setUTCDate(date.getUTCDate() - 1); }
   openModal('PUZZLE ARCHIVE', `<div class="modal-content"><h2>Puzzle Archive</h2><p>A beginner GLSL challenge for each date. Past puzzles are practice and keep separate stats.</p><div class="archive-list">${dates.map(key => { const p = puzzleForDate(key), g = (key === today ? profile.games : profile.practice)[key]; return `<button class="archive-item" data-date="${key}"><strong>#${String(p.number).padStart(3, '0')} · ${p.name}</strong><span>${key === today ? 'TODAY' : g?.attempts?.some(a => a.solved) ? 'SOLVED ✓' : key.slice(5)}</span></button>`; }).join('')}</div></div>`);
   document.querySelectorAll('[data-date]').forEach(button => button.addEventListener('click', () => {
     loadPuzzle(button.dataset.date); closeModal(); window.scrollTo({ top: 0, behavior: 'smooth' });

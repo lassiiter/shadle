@@ -2,7 +2,9 @@ import { shaderPuzzle } from './puzzles.js';
 import { monthPuzzles } from './puzzle-bank.js';
 
 export const MAX_ATTEMPTS = 6;
-export const EPOCH = Date.UTC(2026, 9, 1);
+// Reset on the current UTC daily puzzle; older dates retain their original content.
+export const EPOCH = Date.UTC(2026, 10, 19);
+const LEGACY_EPOCH = Date.UTC(2026, 9, 1);
 export const SAMPLE_SIZE = 96;
 export const MONTH_START = Date.UTC(2026, 10, 13);
 export const STARTER_SOURCE = `precision highp float;
@@ -31,11 +33,16 @@ export function hintProgress(attempts, totalHints, revealed = 0) {
 export function puzzleForDate(key) {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(key)) throw new Error('Invalid puzzle date');
   const date = new Date(key + 'T00:00:00Z');
-  const number = Math.floor((date.getTime() - EPOCH) / 86400000) + 1;
+  const number = Math.floor((date.getTime() - LEGACY_EPOCH) / 86400000) + 1;
   if (!Number.isFinite(number) || dateKey(date) !== key) throw new Error('Invalid puzzle date');
+  if (date.getTime() >= EPOCH) {
+    const index = Math.floor((date.getTime() - EPOCH) / 86400000) % monthPuzzles.length;
+    const approved = monthPuzzles[index];
+    return { key, number: index, ...approved, repairCount: 1, technique: `${approved.level.toUpperCase()} / ${approved.focus.toUpperCase()}`, brief: approved.goal };
+  }
   if (date.getTime() >= MONTH_START) {
     const bankDay = Math.floor((date.getTime() - MONTH_START) / 86400000);
-    const approved = monthPuzzles[bankDay % monthPuzzles.length];
+    const approved = monthPuzzles[bankDay % 30];
     return { key, number, ...approved, repairCount: 1, technique: `${approved.level.toUpperCase()} / ${approved.focus.toUpperCase()}`, brief: approved.goal };
   }
   let seed = Math.floor(date.getTime() / 86400000) ^ 0x51ad1e;
@@ -44,6 +51,15 @@ export function puzzleForDate(key) {
   seed = (seed ^ (seed >>> 16)) >>> 0;
   function random() { seed ^= seed << 13; seed ^= seed >>> 17; seed ^= seed << 5; return (seed >>> 0) / 4294967296; }
   return { key, number, ...shaderPuzzle(number, random) };
+}
+
+// Keep old statistics and drafts before the reset, without attaching a previous
+// rotation's saved shader to a different puzzle on or after launch day.
+export function profileForSequence(parsed, legacy = false) {
+  const cutoff = dateKey(new Date(EPOCH));
+  const records = value => value && typeof value === 'object' && !Array.isArray(value)
+    ? Object.fromEntries(Object.entries(value).filter(([key]) => !legacy || key < cutoff)) : {};
+  return { games: records(parsed?.games), practice: records(parsed?.practice), sound: parsed?.sound === true };
 }
 
 const luminance = (data, offset) => (0.2126 * data[offset] + 0.7152 * data[offset + 1] + 0.0722 * data[offset + 2]) / 255;

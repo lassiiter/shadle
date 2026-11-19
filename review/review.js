@@ -2,7 +2,7 @@
   const root = document.getElementById('shadle-month-review');
   const $ = selector => root.querySelector(selector);
   const puzzles = JSON.parse($('#shadle-month-data').textContent);
-  const storageKey = 'shadle-month-one-review-v1';
+  const storageKey = 'shadle-bank-101-review-v1';
   const saved = (() => { try { return JSON.parse(localStorage.getItem(storageKey) || '{}'); } catch { return {}; } })();
   let state = window.openai?.widgetState || saved;
   let reviews = state.modelContent?.reviews || {};
@@ -16,7 +16,7 @@
   });
 
   function save() {
-    const next = { modelContent: { set: 'month-one-candidates', reviews }, privateContent: { selected } };
+    const next = { modelContent: { set: 'puzzle-bank-000-100', reviews }, privateContent: { selected } };
     if (window.openai?.setWidgetState) window.openai.setWidgetState(next).catch(() => {});
     else {
       try { localStorage.setItem(storageKey, JSON.stringify(next)); }
@@ -82,6 +82,7 @@
 
   show(selected);
   const work = document.createElement('canvas'); work.width = 240; work.height = 240;
+  const targets = [], duplicateTargets = [], similarShapes = [];
   try {
     const renderer = createRenderer(work);
     try {
@@ -91,6 +92,7 @@
           const starterPixels = renderer.pixels(), starter = work.toDataURL('image/png');
           renderer.render(puzzle.source);
           const targetPixels = renderer.pixels(), target = work.toDataURL('image/png');
+          targets.push({ id: puzzle.id, pixels: targetPixels });
           const starterResult = compareImages(starterPixels, targetPixels, SAMPLE_SIZE, SAMPLE_SIZE);
           const colorVaries = targetPixels.some((value, offset) => offset % 4 !== 3 && value !== targetPixels[offset % 4]);
           checks.push({ id: puzzle.id, name: puzzle.name, compiled: true, variedTarget: colorVaries, starterScore: starterResult.score, starterAlreadySolved: starterResult.solved });
@@ -102,10 +104,44 @@
         } catch (error) { checks.push({ id: puzzle.id, name: puzzle.name, compiled: false, error: error.message }); }
       }
     } finally { renderer.dispose(); }
+    // Compare every target pair using the game's actual matching rule. Also
+    // compare normalized high-contrast channels to catch simple recolors.
+    const shapes = targets.map(target => {
+      let bestRange = -1, channel = 0, low = 0;
+      for (let c = 0; c < 3; c++) {
+        let min = 255, max = 0;
+        for (let i = c; i < target.pixels.length; i += 4) { min = Math.min(min, target.pixels[i]); max = Math.max(max, target.pixels[i]); }
+        if (max - min > bestRange) { bestRange = max - min; channel = c; low = min; }
+      }
+      const values = Float32Array.from({ length: SAMPLE_SIZE * SAMPLE_SIZE }, (_, i) => (target.pixels[i * 4 + channel] - low) / Math.max(1, bestRange));
+      // Recolor comparison applies to one-field images. Independent red/green
+      // coordinate ramps are not the same image as a single horizontal ramp.
+      let scalar = true;
+      for (let c = 0; c < 3; c++) {
+        let min = 255, max = 0;
+        for (let i = c; i < target.pixels.length; i += 4) { min = Math.min(min, target.pixels[i]); max = Math.max(max, target.pixels[i]); }
+        if (max - min < 10) continue;
+        let difference = 0, inverted = 0;
+        for (let i = 0; i < values.length; i++) {
+          const other = (target.pixels[i * 4 + c] - min) / (max - min);
+          difference += Math.abs(values[i] - other); inverted += Math.abs(values[i] + other - 1);
+        }
+        if (Math.min(difference, inverted) / values.length > 0.02) scalar = false;
+      }
+      return { values, scalar };
+    });
+    for (let a = 0; a < targets.length; a++) for (let b = a + 1; b < targets.length; b++) {
+      if (compareImages(targets[a].pixels, targets[b].pixels).solved) duplicateTargets.push([targets[a].id, targets[b].id]);
+      if (!shapes[a].scalar || !shapes[b].scalar) continue;
+      let difference = 0, inverted = 0;
+      for (let i = 0; i < shapes[a].values.length; i++) { difference += Math.abs(shapes[a].values[i] - shapes[b].values[i]); inverted += Math.abs(shapes[a].values[i] + shapes[b].values[i] - 1); }
+      const error = Math.min(difference, inverted) / shapes[a].values.length;
+      if (error < 0.015) similarShapes.push({ a: targets[a].id, b: targets[b].id, error });
+    }
     const passing = checks.filter(check => check.compiled && check.variedTarget && !check.starterAlreadySolved).length;
-    $('#month-render-status').textContent = `${passing} / ${puzzles.length} render checks passed`;
-    if (passing !== puzzles.length) $('#month-render-status').classList.add('text-destructive');
+    $('#month-render-status').textContent = `${passing} / ${puzzles.length} render checks passed · ${duplicateTargets.length} duplicate targets · ${similarShapes.length} similar-shape pairs`;
+    if (passing !== puzzles.length || duplicateTargets.length || similarShapes.length) $('#month-render-status').classList.add('text-destructive');
   } catch (error) { $('#month-render-status').textContent = error.message; $('#month-render-status').classList.add('text-destructive'); }
-  $('#month-checks').textContent = JSON.stringify(checks, null, 2);
+  $('#month-checks').textContent = JSON.stringify({ puzzles: checks, duplicateTargets, similarShapes }, null, 2);
   show(selected);
 })();
