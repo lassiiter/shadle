@@ -41,17 +41,16 @@ function toast(message) {
 const editor = createEditor({ input: $('#shader-source'), highlight: $('#code-highlight'), gutter: $('#line-numbers'), onChange(source) {
   const lines = source.split('\n').length;
   game.source = source; $('.editor-window').style.setProperty('--source-lines', lines);
-  $('#source-lines').textContent = lines + ' lines · GLSL ES 1.00';
   clearTimeout(previewTimer); save();
   if (graphicsReady && !finished()) {
-    $('#editor-status').textContent = 'Draft saved · previewing…'; $('.live-label').textContent = 'PENDING';
+    $('.live-label').textContent = 'PENDING';
     previewTimer = setTimeout(() => preview(), 500);
   }
 } });
 function showCompilerError(error) {
   const message = error.message || String(error);
   $('#compiler-errors').hidden = false; $('#compiler-log').textContent = message; editor.setError(message);
-  $('#editor-status').textContent = 'Compile error · no attempt used'; $('.live-label').textContent = 'LAST VALID';
+  $('.live-label').textContent = 'LAST VALID';
   $('.output-dot').classList.add('preview-error');
 }
 function clearCompilerError() {
@@ -63,7 +62,6 @@ function preview() {
   try {
     renderers[1].render(game.source); clearCompilerError();
     if (game.previewSource !== game.source) { game.previewSource = game.source; save(); }
-    $('#editor-status').textContent = finished() ? 'Puzzle complete' : 'Preview compiled · no attempt used';
     return true;
   } catch (error) {
     showCompilerError(error);
@@ -79,7 +77,7 @@ function initGraphics() {
     catch (error) { if (!(error instanceof ShaderError)) throw error; renderers[1].render(puzzle.starterSource); }
     graphicsReady = true;
   } catch (error) {
-    $('#editor-status').textContent = 'Graphics unavailable'; $('#compile-button').disabled = true;
+    $('#compile-button').disabled = true;
     const note = document.createElement('p'); note.className = 'error-note'; note.textContent = error.message; $('.preview-window').append(note);
   }
 }
@@ -112,9 +110,7 @@ function renderEnd() {
   $('#view-result-button').hidden = !done; editor.setLocked(done); $('#reset-button').disabled = done; $('#compile-button').disabled = done || !graphicsReady;
   $('#preview-button').disabled = !graphicsReady;
   $('#compile-label').textContent = done ? won ? 'Target matched' : 'Puzzle complete' : 'Submit shader';
-  if (!graphicsReady) $('#editor-status').textContent = 'Graphics unavailable';
   if (!done) return;
-  $('#editor-status').textContent = 'Puzzle complete';
   $('#attempts-caption').textContent = won ? 'TARGET MATCHED' : 'ATTEMPT LIMIT REACHED';
 }
 function renderPuzzle() {

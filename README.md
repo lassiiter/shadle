@@ -18,7 +18,7 @@ Ctrl/Cmd + S saves your shader draft to local browser storage and suppresses the
 
 In the shader editor, Ctrl/Cmd + X cuts the entire current line when nothing is selected, including its following line break when present. Selected text cuts normally. Cutting uses the browser's native clipboard and undo behavior, updates the saved draft and preview, and does not use an attempt. Completed puzzles remain read-only.
 
-The **Uniform Reference** link beneath the editor buttons opens the GLSL functions and uniforms reference. Keyboard shortcuts stay beside it; the separate topic and description section beneath Hints is removed.
+The **Uniform Reference** link beneath the editor buttons opens the GLSL functions and uniforms reference. Shortcut hints remain in the button tooltips and accessible editor help. The redundant editor status row and line-count label are removed, while compiler errors remain visible inside the editor.
 
 The preview header shows **SHADER PUZZLE #… / date**. A hatched file bar separates the preview images from the editor. The separate puzzle metadata section, repair brief, and Jump to TODO strip are removed. Daily, practice, and debug sessions share the same puzzle title format.
 
